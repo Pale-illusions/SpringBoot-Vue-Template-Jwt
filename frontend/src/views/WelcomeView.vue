@@ -14,7 +14,7 @@
       <div style="margin-top: 5px">在这里你可以同性交友，因为都是男的，没有学Java的女生。</div>
     </div>
     <div class="right-card">
-
+      <router-view/>
     </div>
   </div>
 </template>
