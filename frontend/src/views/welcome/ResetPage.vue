@@ -130,18 +130,26 @@ const onValidate = (prop, isValid) => {
 }
 
 const validateEmail = () => {
-  coldTime.value = 60
-  get(`/api/auth/ask-code?email=${form.email}&type=reset`, () => {
-    ElMessage.success(`验证码已发送到邮箱: ${form.email}，请注意查收`)
-    const handle = setInterval(() => {
-      coldTime.value--
-      if(coldTime.value === 0) {
-        clearInterval(handle)
-      }
-    }, 1000)
+  get(`api/auth/check-email?email=${form.email}`, (response) => {
+    if (response) {
+      coldTime.value = 60
+      get(`/api/auth/ask-code?email=${form.email}&type=reset`, () => {
+        ElMessage.success(`验证码已发送到邮箱: ${form.email}，请注意查收`)
+        const handle = setInterval(() => {
+          coldTime.value--
+          if(coldTime.value === 0) {
+            clearInterval(handle)
+          }
+        }, 1000)
+      }, (message) => {
+        ElMessage.warning(message)
+        coldTime.value = 0
+      })
+    } else {
+      ElMessage.warning('该电子邮件地址无效，请输入有效的电子邮件地址')
+    }
   }, (message) => {
     ElMessage.warning(message)
-    coldTime.value = 0
   })
 }
 
